@@ -9,7 +9,9 @@ import (
 )
 
 const (
-    ROOTDIR = "Monitor::rootdir"
+    ROOTDIR  = "Monitor::rootdir"
+    WORKDIR  = "Monitor::workdir"
+    INTERVAL = "Monitor::interval"
 )
 
 var monitor = util.DefMonitor
@@ -20,8 +22,8 @@ func main() {
     flag.Parse()
 
     parse(c)
+    monitor.Monitor()
 
-    // monitor.PrintFile()
 }
 
 func parse(conf string) {
@@ -30,6 +32,10 @@ func parse(conf string) {
         log.Panic(err)
     }
     rootdir := iniconf.String(ROOTDIR)
+    // todo multi rootdir
+    monitor.Interval, _ = iniconf.Int(INTERVAL)
+    monitor.WorkDir = iniconf.String(WORKDIR)
+
     err = monitor.AddRootDir(rootdir)
     if err != nil {
         fmt.Printf("%s", err)

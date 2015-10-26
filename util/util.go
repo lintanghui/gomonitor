@@ -4,6 +4,7 @@ import (
     "fmt"
     "log"
     "os"
+    "os/exec"
     "path/filepath"
 )
 
@@ -11,13 +12,18 @@ type GoMonitor struct {
     RootDir    []string         // the dir to monitor that set at configuration file
     sourceDir  []string         // directory files in RootDir
     FileStatus map[string]int64 // file path and modtime
+    WorkDir    string
+    change     chan bool
+    Interval   int
+    cmd        *exec.Cmd
 }
 
 var DefMonitor = NewGoMonitor()
 
 func NewGoMonitor() (goMonitor *GoMonitor) {
     m := make(map[string]int64, 20)
-    goMonitor = &GoMonitor{FileStatus: m}
+    ch := make(chan bool, 1)
+    goMonitor = &GoMonitor{FileStatus: m, change: ch}
 
     return
 }
