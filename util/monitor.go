@@ -4,6 +4,7 @@ import (
     "log"
     "os"
     "os/exec"
+    "path/filepath"
     "strings"
     "time"
 )
@@ -75,10 +76,14 @@ func (w *GoMonitor) WalkFile() {
             log.Printf("filename err :%s", err.Error())
         }
         newModTime := info.ModTime().Unix()
+        // update modtime
         if modtime != newModTime {
             log.Printf("File :%s has been changed", file)
             w.FileStatus[file] = newModTime
             change = true
+            if info.IsDir() {
+                filepath.Walk(file, w.updatedir)
+            }
         }
     }
 
@@ -86,4 +91,14 @@ func (w *GoMonitor) WalkFile() {
         w.change <- true
     }
 
+}
+
+func (w *GoMonitor) updatedir(path string, f os.FileInfo, err error) error {
+    if err != nil {
+        log.Printf("%s\n", err)
+        return err
+    }
+
+    w.FileStatus[path] = f.ModTime().Unix()
+    return nil
 }
