@@ -73,7 +73,7 @@ func (w *GoMonitor) WalkFile() {
     for file, modtime := range w.FileStatus {
         info, err := os.Stat(file)
         if err != nil {
-            log.Printf("filename err :%s", err.Error())
+            log.Printf("file :%s does not exit or had been delete", err.Error())
             // file had been moved
             delete(w.FileStatus, file)
             continue
