@@ -74,6 +74,9 @@ func (w *GoMonitor) WalkFile() {
         info, err := os.Stat(file)
         if err != nil {
             log.Printf("filename err :%s", err.Error())
+            // file had been moved
+            delete(w.FileStatus, file)
+            continue
         }
         newModTime := info.ModTime().Unix()
         // update modtime
