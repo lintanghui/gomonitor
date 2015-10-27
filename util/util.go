@@ -16,6 +16,8 @@ type GoMonitor struct {
     change     chan bool
     Interval   int
     cmd        *exec.Cmd
+    BuildCmd   string
+    RunCmd     string
 }
 
 var DefMonitor = NewGoMonitor()

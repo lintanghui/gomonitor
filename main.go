@@ -12,6 +12,8 @@ const (
     ROOTDIR  = "Monitor::rootdir"
     WORKDIR  = "Monitor::workdir"
     INTERVAL = "Monitor::interval"
+    BUILDCMD = "Monitor::buildcmd"
+    RUNCMD   = "Monitor::runcmd"
 )
 
 var monitor = util.DefMonitor
@@ -35,7 +37,10 @@ func parse(conf string) {
     // todo multi rootdir
     monitor.Interval, _ = iniconf.Int(INTERVAL)
     monitor.WorkDir = iniconf.String(WORKDIR)
-
+    monitor.RunCmd = iniconf.String(RUNCMD)
+    monitor.BuildCmd = iniconf.String(BUILDCMD)
+    log.Printf("BuildCmd :%s\n", monitor.BuildCmd)
+    log.Printf("RunCmd :%s\n", monitor.RunCmd)
     err = monitor.AddRootDir(rootdir)
     if err != nil {
         fmt.Printf("%s", err)
