@@ -6,6 +6,7 @@ import (
     "github.com/astaxie/beego/config"
     "github.com/gomonitor/util"
     "log"
+    "os"
     "strings"
 )
 
@@ -44,7 +45,9 @@ func parse(conf string) {
     log.Printf("BuildCmd :%s\n", monitor.BuildCmd)
     log.Printf("RunCmd :%s\n", monitor.RunCmd)
 
+    gopath := os.Getenv("GOPATH")
     for _, dir := range monitorDir {
+        dir = strings.Replace(dir, "$GoPath", gopath, -1)
         err = monitor.AddRootDir(dir)
         if err != nil {
             fmt.Printf("%s", err)
