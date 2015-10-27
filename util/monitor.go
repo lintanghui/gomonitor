@@ -54,14 +54,11 @@ func (w *GoMonitor) Run() {
 
 func (w *GoMonitor) Build() (err error) {
     args := strings.Split(w.BuildCmd, " ")
-    w.cmd = exec.Command(args[0], args[1:]...)
+    out, err = exec.Command(args[0], args[1:]...).CombinedOutput()
     log.Printf("[build cmd] %s", w.BuildCmd)
-    w.cmd.Stdin = os.Stdin
-    w.cmd.Stdout = os.Stdout
-    w.cmd.Stderr = os.Stderr
-    err = w.cmd.Run()
+
     if err != nil {
-        log.Printf("%s\n", err)
+        log.Printf("%s\n", string(out))
         return
     }
     log.Printf("build sucess\n")
