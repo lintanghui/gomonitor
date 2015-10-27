@@ -6,6 +6,7 @@ import (
     "github.com/astaxie/beego/config"
     "github.com/gomonitor/util"
     "log"
+    "strings"
 )
 
 const (
@@ -34,6 +35,7 @@ func parse(conf string) {
         log.Panic(err)
     }
     rootdir := iniconf.String(ROOTDIR)
+    monitorDir := strings.Split(rootdir, ";")
     // todo multi rootdir
     monitor.Interval, _ = iniconf.Int(INTERVAL)
     monitor.WorkDir = iniconf.String(WORKDIR)
@@ -41,8 +43,12 @@ func parse(conf string) {
     monitor.BuildCmd = iniconf.String(BUILDCMD)
     log.Printf("BuildCmd :%s\n", monitor.BuildCmd)
     log.Printf("RunCmd :%s\n", monitor.RunCmd)
-    err = monitor.AddRootDir(rootdir)
-    if err != nil {
-        fmt.Printf("%s", err)
+
+    for _, dir := range monitorDir {
+        err = monitor.AddRootDir(dir)
+        if err != nil {
+            fmt.Printf("%s", err)
+        }
     }
+
 }
